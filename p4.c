@@ -4,6 +4,7 @@
 
 char tabl[num_line][num_col];
 
+/*Init function to setup the puissance4 table*/
 void init_tabl(void){
   int i, j;
   for(i=0; i<num_line; i++){
@@ -13,6 +14,7 @@ void init_tabl(void){
   }
 }
 
+/*Display the table*/
 void print_tabl(void){
   int i, j;
   for(i=0; i<num_line; i++){                                                                                            printf("\n");                                                                                                       for(j=0; j<num_col; j++){                                                                                             printf("%c ", tabl[i][j]);
@@ -20,6 +22,7 @@ void print_tabl(void){
   }
 }
 
+/*ask the column to play*/
 int ask_column(void){
   int col_chosen;
   printf("\nPlease enter a column number between 1 and %d : ", num_col);
@@ -31,7 +34,7 @@ int ask_column(void){
   return col_chosen;
 }
 
-
+/*Main founction of the game*/
 int main(void){
   int num_turns = 22;
   int actual_turn = 1;
