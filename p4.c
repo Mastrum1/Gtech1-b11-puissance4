@@ -25,8 +25,10 @@ void print_tabl(void){
 /*ask the column to play*/
 int ask_column(void){
   int col_chosen;
+  char col_chosen_char[10];
   printf("\nPlease enter a column number between 1 and %d : ", num_col);
   scanf("%d", &col_chosen);
+  
   while(col_chosen < 1 || col_chosen > 7){
     printf("The value you have written isn't a number between 1 and %d, please retry : ", num_col);
     scanf(" %d", &col_chosen);
