@@ -36,6 +36,12 @@ int ask_column(void){
   return col_chosen;
 }
 
+
+/*puts a token in the given column*/
+void place_token(player, column){
+  int a;
+}
+
 /*Main founction of the game*/
 int main(void){
   int num_turns = 22;
