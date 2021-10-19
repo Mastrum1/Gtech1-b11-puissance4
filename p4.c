@@ -5,6 +5,7 @@
 #define num_col 7
 
 int tabl[num_line][num_col];
+const char displays[] = ".oxH";
 
 /*Init function to setup the puissance4 table*/
 void init_tabl(void){
@@ -16,10 +17,12 @@ void init_tabl(void){
   }
 }
 
-/*Display the table*/
+/*Displays the table*/
 void print_tabl(void){
   int i, j;
-  const char displays[] = ".oxH";
+  for (i=1; i<num_col+1; i++){
+    printf("%d ", i);
+  }
   for(i=0; i<num_line; i++){
       printf("\n");                                                                                                       
       for(j=0; j<num_col; j++){                                                                                             
@@ -33,7 +36,7 @@ void print_tabl(void){
 int ask_column(int player){
   int col_chosen;
   char col_chosen_char[10];
-  printf("Player %d, please enter a column number between 1 and %d : ", player, num_col);
+  printf("Player %d (Symbol %c), please enter a column number between 1 and %d : ", player, displays[player],  num_col);
   scanf("%d", &col_chosen);
   
   while(col_chosen < 1 || col_chosen > 7){
@@ -117,6 +120,8 @@ void player_versus_player(void){
   int actual_player = 1;
   bool victory = false;
   init_tabl();
+  printf("Welcome to Puissance4 (Player versus Player)!  \nGame size is %dx%d\n", num_line, num_col);
+
   while(victory == false && tokens_placed < max_tokens){
     print_tabl();
     int actual_turn = tokens_placed/2 +1;
@@ -138,6 +143,10 @@ void player_versus_player(void){
   }
 }
 
+bool bot_turn(int bot_number){
+  int i;
+}
+
 /* plays a game of puissance 4 with 1 human player against bots */
 void player_versus_ia(int numb_of_bot){
   int max_tokens = num_col * num_line;
@@ -145,6 +154,8 @@ void player_versus_ia(int numb_of_bot){
   int actual_player_type = 1;
   bool victory = false;
   init_tabl();
+  printf("Welcome to Puissance4 (Player versus IA)!  \nGame size is %dx%d\n", num_line, num_col);
+
   while(victory == false && tokens_placed < max_tokens){
     if (actual_player_type == 1){
       victory = player_turn(tokens_placed, actual_player_type);
@@ -187,7 +198,7 @@ int main(void){
   }
   
   else if(gamemode_chosen == 3){
-    printf("\nGoodbye !\n");
+    printf("\nGoodbye !\n\n");
     return 0;
   }
 }
