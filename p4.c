@@ -23,12 +23,14 @@ void print_tabl(void){
   for (i=1; i<num_col+1; i++){
     printf("%d ", i);
   }
+  printf("\n--------------");
   for(i=0; i<num_line; i++){
       printf("\n");                                                                                                       
       for(j=0; j<num_col; j++){                                                                                             
         printf("%c ", displays[tabl[i][j]]);
     }
   }
+  printf("\n--------------");
   printf("\n");
 }
 
