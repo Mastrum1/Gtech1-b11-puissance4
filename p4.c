@@ -19,7 +19,7 @@ void init_tabl(void){
 /*Display the table*/
 void print_tabl(void){
   int i, j;
-  const char displays[] = ".ox";
+  const char displays[] = ".oxH";
   for(i=0; i<num_line; i++){
       printf("\n");                                                                                                       
       for(j=0; j<num_col; j++){                                                                                             
@@ -92,8 +92,26 @@ int change_player(int player){
   return player == 1 ? 2 : 1;
 }
 
-/*Main founction of the game*/
-int main(void){
+bool player_turn(int tokens_placed, int actual_player){
+  print_tabl();
+  int actual_turn = tokens_placed/2 +1;
+  printf("\nTURN NUMBER %d\n", actual_turn);
+  int col_chosen = ask_column(actual_player);
+  int line_token_placed = search_lowest_available(col_chosen);
+  place_token(actual_player, col_chosen);
+  if (victory_test(actual_player, line_token_placed, col_chosen)){
+    print_tabl();
+    printf("Player %d won in %d turns, congratulations !! \n", actual_player, actual_turn);
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
+
+/* plays a game of puissance 4 with multiple human players */
+void player_versus_player(void){
   int max_tokens = num_col * num_line;
   int tokens_placed = 0;
   int actual_player = 1;
@@ -117,5 +135,59 @@ int main(void){
   }
   if (victory == false){
     printf("Draw : no one managed to align 4 tokens !\n");
+  }
+}
+
+/* plays a game of puissance 4 with 1 human player against bots */
+void player_versus_ia(int numb_of_bot){
+  int max_tokens = num_col * num_line;
+  int tokens_placed = 0;
+  int actual_player_type = 1;
+  bool victory = false;
+  init_tabl();
+  while(victory == false && tokens_placed < max_tokens){
+    if (actual_player_type == 1){
+      victory = player_turn(tokens_placed, actual_player_type);
+      tokens_placed++;
+      actual_player_type = change_player(actual_player_type);
+    }
+    else {
+      int bot_number;
+      for(bot_number=2; bot_number<numb_of_bot+2; bot_number++) /* starting from 2 so that the bots tokens displays aren't the same as the player's which is displays[1]*/  
+      {
+        bot_turn(bot_number);
+        tokens_placed++;
+        
+      actual_player_type = change_player(actual_player_type);
+      }
+      
+    }
+  }
+  if (victory == false){
+    printf("Draw : no one managed to align 4 tokens !\n");
+  }
+}
+
+
+/*Main founction of the game*/
+int main(void){
+  int gamemode_chosen; 
+  printf("Welcome to the puissance 4 game, please write the number of the mode you want to play \n(write 1 for Player 1v1, 2 for Player vs IAs or 3 to exit) : ");
+  scanf("%d", &gamemode_chosen);
+  
+  if (gamemode_chosen == 1){
+    player_versus_player();
+  }
+  
+  else if (gamemode_chosen == 2){
+    int numb_of_bots;
+    printf("\nPlease insert the number of bot you want to play against (from 1 to 3)");
+    scanf("%d", numb_of_bots);
+    player_versus_ia(numb_of_bots);
+  }
+  
+  else if(gamemode_chosen == 3){
+    printf("\nGoodbye !\n");
+    return 0;
   }
 }
