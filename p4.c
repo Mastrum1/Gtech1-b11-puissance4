@@ -34,17 +34,35 @@ void print_tabl(void){
   printf("\n");
 }
 
+void buffer_drain (void){
+  int c = getchar();
+  while (c != '\n' && c != EOF){
+    c = getchar();
+  }
+}
+
 /*ask the column to play*/
 int ask_column(int player){
   int col_chosen;
-  char col_chosen_char[10];
-  printf("Player %d (Symbol %c), please enter a column number between 1 and %d : ", player, displays[player],  num_col);
-  scanf("%d", &col_chosen);
-  
-  while(col_chosen < 1 || col_chosen > 7){
-    printf("The value you have written isn't a number between 1 and %d, please retry : ", num_col);
-    scanf(" %d", &col_chosen);
+  bool correct_input = true;
+  printf("Player %d (Symbol %c), please enter a column number between 1 and %d : ", player, displays[player], num_col);
+  do{
+    int verif_scan = scanf("%d", &col_chosen);
+    correct_input = true;
+    verif_scan = scanf("%d", &col_chosen);
+    if (verif_scan == 0){
+      buffer_drain();
+      printf("you didn't write a number, please try again : ");
+      correct_input = false;
+    }
+    if(col_chosen < 1 || col_chosen > 7){
+      printf("The value you have written isn't a number between 1 and %d, please retry : ", num_col);
+      scanf(" %d", &col_chosen);
+      correct_input = false;
+    }
   }
+    while (correct_input == false);
+  
   return col_chosen-1;
 }
 /* search the lowest line where a token can be put in the given column and returns it's number*/
