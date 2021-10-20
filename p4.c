@@ -34,37 +34,6 @@ void print_tabl(void){
   printf("\n");
 }
 
-void buffer_drain (void){
-  int c = getchar();
-  while (c != '\n' && c != EOF){
-    c = getchar();
-  }
-}
-
-/*ask the column to play*/
-int ask_column(int player){
-  int col_chosen;
-  bool correct_input = true;
-  printf("Player %d (Symbol %c), please enter a column number between 1 and %d : ", player, displays[player], num_col);
-  do{
-    int verif_scan = scanf("%d", &col_chosen);
-    correct_input = true;
-    verif_scan = scanf("%d", &col_chosen);
-    if (verif_scan == 0){
-      buffer_drain();
-      printf("you didn't write a number, please try again : ");
-      correct_input = false;
-    }
-    if(col_chosen < 1 || col_chosen > 7){
-      printf("The value you have written isn't a number between 1 and %d, please retry : ", num_col);
-      scanf(" %d", &col_chosen);
-      correct_input = false;
-    }
-  }
-    while (correct_input == false);
-  
-  return col_chosen-1;
-}
 /* search the lowest line where a token can be put in the given column and returns it's number*/
 int search_lowest_available(int column){
   int line;
@@ -75,6 +44,50 @@ int search_lowest_available(int column){
   }
   return num_line-1;
 }
+
+/*empties the scan buffer, mostly used when an incorrect value is written by the player*/
+void buffer_drain (void){
+  int c = getchar();
+  while (c != '\n' && c != EOF){
+    c = getchar();
+  }
+}
+
+/*ask the column to play*/
+int ask_column(int player){
+  int col_chosen;
+  bool correct_input;
+  bool skip_next_test = false;
+  printf("Player %d (Symbol %c), please enter a column number between 1 and %d : ", player, displays[player], num_col);
+  do{
+    int verif_scan = scanf("%d", &col_chosen);
+    correct_input = true;
+    if (verif_scan == 0){
+      buffer_drain();
+      printf("You didn't write a number, please try again : ");
+      correct_input = false;
+    }
+    
+    else {
+      if(col_chosen < 1 || col_chosen > 7){
+        printf("The value you have written isn't a number between 1 and %d, please retry : ", num_col);
+        correct_input = false;
+        skip_next_test = true;
+      }
+    }
+    
+      if(search_lowest_available(col_chosen-1) <= -1 && skip_next_test == false){
+        printf("The column you have chosen is full, please try another one : ");
+        correct_input = false;
+        skip_next_test = false;
+      }
+  }
+    while (correct_input == false);
+  
+  return col_chosen-1;
+}
+
+
 /*puts a token in the given column at the lowest line possible*/
 void place_token(int player, int column){
   int line_to_place_on = search_lowest_available(column);
@@ -202,10 +215,24 @@ void player_versus_ia(int numb_of_bot){
 
 /*Main founction of the game*/
 int main(void){
-  int gamemode_chosen; 
+  int gamemode_chosen;
+  bool correct_input; 
   printf("Welcome to the puissance 4 game, please write the number of the mode you want to play \n(write 1 for Player 1v1, 2 for Player vs IAs or 3 to exit) : ");
-  scanf("%d", &gamemode_chosen);
-  
+  do{
+    int verif_scan = scanf("%d", &gamemode_chosen);
+    correct_input = true;
+    if (verif_scan == 0){
+      buffer_drain();
+      printf("You didn't write a number, please try again : ");
+      correct_input = false;
+    }
+    else
+      if (gamemode_chosen < 1 || gamemode_chosen > 3){
+      printf("Please write a correct number, please try again \n(1 for Player 1v1, 2 for Player vs IAs or 3 to exit) : ");
+      correct_input = false;
+    }
+  }
+    while(correct_input == false);
   if (gamemode_chosen == 1){
     player_versus_player();
   }
