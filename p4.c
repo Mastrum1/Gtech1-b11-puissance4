@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <math.h>
 
 #define num_line 6
-#define num_col 7
-
+#define num_col 100
 int tabl[num_line][num_col];
+const int numb_of_digits_max = 3;
 const char displays[] = ".oxH";
 
 /*Init function to setup the puissance4 table*/
@@ -17,20 +18,86 @@ void init_tabl(void){
   }
 }
 
+void affichage_vertical(int numb){
+    const int numb_of_line = log10(numb) + 1;
+    int empty_space_number = 0;
+    int number_until_new_digit;
+    int i, j;
+    
+    int digits_array[numb_of_digits_max];
+    int actual_number;
+    int actual_digit;
+    int digit_to_print;
+    int compteur;
+    int compteur_nombres;
+    
+    for(i=0; i<numb_of_line; i++){
+        printf("\n");
+        number_until_new_digit = 9;
+        compteur_nombres = 0;
+        digit_to_print = 0;
+        for(compteur = 0; compteur < i; compteur++){
+            number_until_new_digit = number_until_new_digit * 10;
+        }
+
+        for(j=0; j<(empty_space_number); j++){
+            printf("  ");
+        }
+        
+
+
+        for(j=empty_space_number; j<numb; j++){
+            actual_number = j+1;
+            compteur = 0;
+
+            while (actual_number != 0){
+                actual_digit = actual_number % 10;
+
+                digits_array[compteur] = actual_digit;
+                compteur++;
+
+                actual_number = actual_number / 10;
+            }
+
+            printf("%d ", digits_array[digit_to_print]);
+            compteur_nombres++;
+
+            if (compteur_nombres % number_until_new_digit == 0){
+                digit_to_print++;
+                number_until_new_digit = number_until_new_digit * 10;
+                compteur_nombres = 0;
+            }
+            
+        }
+        if (empty_space_number == 0){
+            empty_space_number = 9;
+        }
+        else{
+            empty_space_number = empty_space_number * 10 + 9;
+        }
+
+        
+    }
+}
+
+
 /*Displays the table*/
 void print_tabl(void){
   int i, j;
-  for (i=1; i<num_col+1; i++){
-    printf("%d ", i);
+  for (i=0; i<num_col*2; i++){
+    printf("-");
   }
-  printf("\n--------------");
   for(i=0; i<num_line; i++){
       printf("\n");                                                                                                       
       for(j=0; j<num_col; j++){                                                                                             
         printf("%c ", displays[tabl[i][j]]);
     }
   }
-  printf("\n--------------");
+  printf("\n");
+  for (i=0; i<num_col*2; i++){
+    printf("-");
+  }
+  affichage_vertical(num_col);
   printf("\n");
 }
 
