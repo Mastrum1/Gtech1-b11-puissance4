@@ -1,16 +1,22 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdlib.h>
 #include <math.h>
 
-#define num_line 6
-#define num_col 100
-int tabl[num_line][num_col];
+int num_line;
+int num_col;
+int** tabl;
 const int numb_of_digits_max = 3;
 const char displays[] = ".oxH";
 
 /*Init function to setup the puissance4 table*/
-void init_tabl(void){
+void init_tabl(int num_line, int num_col){
   int i, j;
+  tabl = malloc(num_line* sizeof(int*));
+  for (i=0; i<num_line; i++){
+    tabl[i] = malloc(num_col * sizeof(int*));
+  }
+
   for(i=0; i<num_line; i++){
     for(j=0; j<num_col; j++){
       tabl[i][j] = 0;
@@ -136,7 +142,7 @@ int ask_column(int player){
     }
     
     else {
-      if(col_chosen < 1 || col_chosen > 7){
+      if(col_chosen < 1 || col_chosen > num_col){
         printf("The value you have written isn't a number between 1 and %d, please retry : ", num_col);
         correct_input = false;
         skip_next_test = true;
@@ -214,12 +220,12 @@ bool player_turn(int tokens_placed, int actual_player){
 
 
 /* plays a game of puissance 4 with multiple human players */
-void player_versus_player(void){
+void player_versus_player(int num_line, int num_col){
   int max_tokens = num_col * num_line;
   int tokens_placed = 0;
   int actual_player = 1;
   bool victory = false;
-  init_tabl();
+  init_tabl(num_line, num_col);
   printf("Welcome to Puissance4 (Player versus Player)!  \nGame size is %dx%d\n", num_line, num_col);
 
   while(victory == false && tokens_placed < max_tokens){
@@ -243,17 +249,17 @@ void player_versus_player(void){
   }
 }
 
-bool bot_turn(int bot_number){
+bool bot_turn(){
   int i;
 }
 
-/* plays a game of puissance 4 with 1 human player against bots */
-void player_versus_ia(int numb_of_bot){
+/* plays a game of puissance 4 with 1 human player against a bot*/
+void player_versus_ia(int num_line, int num_col){
   int max_tokens = num_col * num_line;
   int tokens_placed = 0;
   int actual_player_type = 1;
   bool victory = false;
-  init_tabl();
+  init_tabl(num_line, num_col);
   printf("Welcome to Puissance4 (Player versus IA)!  \nGame size is %dx%d\n", num_line, num_col);
 
   while(victory == false && tokens_placed < max_tokens){
@@ -263,15 +269,10 @@ void player_versus_ia(int numb_of_bot){
       actual_player_type = change_player(actual_player_type);
     }
     else {
-      int bot_number;
-      for(bot_number=2; bot_number<numb_of_bot+2; bot_number++) /* starting from 2 so that the bots tokens displays aren't the same as the player's which is displays[1]*/  
-      {
-        bot_turn(bot_number);
-        tokens_placed++;
+      bot_turn();
+      tokens_placed++;
         
       actual_player_type = change_player(actual_player_type);
-      }
-      
     }
   }
   if (victory == false){
@@ -284,34 +285,71 @@ void player_versus_ia(int numb_of_bot){
 int main(void){
   int gamemode_chosen;
   bool correct_input; 
-  printf("Welcome to the puissance 4 game, please write the number of the mode you want to play \n(write 1 for Player 1v1, 2 for Player vs IAs or 3 to exit) : ");
+  int verif_scan;
+  int max_num_column = 100;
+  printf("Welcome to the puissance 4 game, please write the number of the mode you want to play \n(write 1 for basic Player 1v1, 2 for a Player 1v1 with custom number of lines/columns, 3 for Player vs IA and 4 to exit) : ");
   do{
-    int verif_scan = scanf("%d", &gamemode_chosen);
+    verif_scan = scanf("%d", &gamemode_chosen);
     correct_input = true;
     if (verif_scan == 0){
       buffer_drain();
-      printf("You didn't write a number, please try again : ");
+      printf("\nYou didn't write a number, please try again \n(1 for basic Player 1v1, 2 for a Player 1v1 with custom number of lines/columns, 3 for Player vs IA and 4 to exit) : ");
       correct_input = false;
     }
     else
-      if (gamemode_chosen < 1 || gamemode_chosen > 3){
-      printf("Please write a correct number, please try again \n(1 for Player 1v1, 2 for Player vs IAs or 3 to exit) : ");
+      if (gamemode_chosen < 1 || gamemode_chosen > 4){
+      printf("\nPlease write a correct number \n(1 for basic Player 1v1, 2 for a Player 1v1 with custom number of lines/columns, 3 for Player vs IA and 4 to exit) : ");
       correct_input = false;
     }
   }
     while(correct_input == false);
   if (gamemode_chosen == 1){
-    player_versus_player();
+    num_line = 6;
+    num_col = 7;
+    player_versus_player(num_line, num_col);
   }
   
   else if (gamemode_chosen == 2){
-    int numb_of_bots;
-    printf("\nPlease insert the number of bot you want to play against (from 1 to 3)");
-    scanf("%d", numb_of_bots);
-    player_versus_ia(numb_of_bots);
+    num_line = 6;
+    num_col = 7;
+    player_versus_ia(num_line, num_col);
   }
   
-  else if(gamemode_chosen == 3){
+  else if (gamemode_chosen == 3){
+    printf("\nPlease enter the number of line you want : ");
+    do {
+      verif_scan = scanf("%d", &num_line);
+      correct_input = true;
+      if (verif_scan == 0){
+        buffer_drain();
+        printf("\nYou didn't write a number, please try again : ");
+        correct_input = false;
+      }
+
+    } while (correct_input == false);
+
+    printf("\nPlease enter the number of column you want (max 100) : ");
+    do {
+      verif_scan = scanf("%d", &num_col);
+      correct_input = true;
+      if (verif_scan == 0){
+        buffer_drain();
+        printf("\nYou didn't write a number, please try again : ");
+        correct_input = false;
+      }
+
+      else 
+        if(num_col < 1 || num_col > max_num_column){
+          printf("\n You didn't write a number between 1 and %d, please try again : ", max_num_column);
+          correct_input = false;
+        }
+    } while (correct_input == false);
+
+    player_versus_player(num_line, num_col);
+
+  }
+
+  else if(gamemode_chosen == 4){
     printf("\nGoodbye !\n\n");
     return 0;
   }
