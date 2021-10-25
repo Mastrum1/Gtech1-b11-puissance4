@@ -251,6 +251,21 @@ void player_versus_player(int num_line, int num_col){
 
 bool bot_turn(){
   int i;
+  bool already_played = false;  
+  for(i; i<num_col; i++){
+    if(victory_test(2, search_lowest_available(i),i)==true){
+      place_token(2,i);
+      already_played=true;
+    }
+    if(victory_test(1, search_lowest_available(i),i)==true && already_played == false){
+      place_token(2,i);
+      already_played=true;
+    }
+  }
+  if(already_played == false){
+    place_token(2,rand()%num_col);  
+   
+  }	  
 }
 
 /* plays a game of puissance 4 with 1 human player against a bot*/
