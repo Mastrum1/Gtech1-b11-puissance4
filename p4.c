@@ -287,18 +287,19 @@ int main(void){
   bool correct_input; 
   int verif_scan;
   int max_num_column = 100;
-  printf("Welcome to the puissance 4 game, please write the number of the mode you want to play \n(write 1 for basic Player 1v1, 2 for a Player 1v1 with custom number of lines/columns, 3 for Player vs IA and 4 to exit) : ");
+  printf("Welcome to the puissance 4 game, please enter the number of the mode you want to play \n 1 for basic Player 1v1 \n 2 for a Player 1v1 with custom number of lines/columns \n 3 for Player vs IA \n 4 to exit the game\n");
   do{
+    printf("Enter your choice : ");
     verif_scan = scanf("%d", &gamemode_chosen);
     correct_input = true;
     if (verif_scan == 0){
       buffer_drain();
-      printf("\nYou didn't write a number, please try again \n(1 for basic Player 1v1, 2 for a Player 1v1 with custom number of lines/columns, 3 for Player vs IA and 4 to exit) : ");
+      printf("\nYou didn't enter a number, please try again");
       correct_input = false;
     }
     else
       if (gamemode_chosen < 1 || gamemode_chosen > 4){
-      printf("\nPlease write a correct number \n(1 for basic Player 1v1, 2 for a Player 1v1 with custom number of lines/columns, 3 for Player vs IA and 4 to exit) : ");
+      printf("\nPlease enter a correct number");
       correct_input = false;
     }
   }
@@ -309,20 +310,20 @@ int main(void){
     player_versus_player(num_line, num_col);
   }
   
-  else if (gamemode_chosen == 2){
+  else if (gamemode_chosen == 3){
     num_line = 6;
     num_col = 7;
     player_versus_ia(num_line, num_col);
   }
   
-  else if (gamemode_chosen == 3){
+  else if (gamemode_chosen == 2){
     printf("\nPlease enter the number of line you want : ");
     do {
       verif_scan = scanf("%d", &num_line);
       correct_input = true;
       if (verif_scan == 0){
         buffer_drain();
-        printf("\nYou didn't write a number, please try again : ");
+        printf("\nYou didn't enter a number, please try again : ");
         correct_input = false;
       }
 
@@ -334,13 +335,13 @@ int main(void){
       correct_input = true;
       if (verif_scan == 0){
         buffer_drain();
-        printf("\nYou didn't write a number, please try again : ");
+        printf("\nYou didn't enter a number, please try again : ");
         correct_input = false;
       }
 
       else 
         if(num_col < 1 || num_col > max_num_column){
-          printf("\n You didn't write a number between 1 and %d, please try again : ", max_num_column);
+          printf("\n You didn't enter a number between 1 and %d, please try again : ", max_num_column);
           correct_input = false;
         }
     } while (correct_input == false);
