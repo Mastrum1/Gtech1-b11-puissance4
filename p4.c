@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <math.h>
+#include <time.h>
 
 int num_line;
 int num_col;
@@ -251,21 +252,28 @@ void player_versus_player(int num_line, int num_col){
 
 bool bot_turn(){
   int i;
-  bool already_played = false;  
-  for(i; i<num_col; i++){
-    if(victory_test(2, search_lowest_available(i),i)==true){
+  bool already_played = false;
+  bool victory = false;
+  for(i=0; i<num_col; i++){
+    if(victory_test(2, search_lowest_available(i),i)==true && already_played == false && search_lowest_available(i) != -1){
       place_token(2,i);
       already_played=true;
+      victory = true;
     }
-    if(victory_test(1, search_lowest_available(i),i)==true && already_played == false){
+    if(victory_test(1, search_lowest_available(i),i)==true && already_played == false && search_lowest_available(i) != -1){
       place_token(2,i);
       already_played=true;
     }
   }
   if(already_played == false){
-    place_token(2,rand()%num_col);  
-   
-  }	  
+    srand(time(NULL));
+    int col_to_play = rand()%num_col;
+    while (search_lowest_available(col_to_play) == -1){
+      col_to_play = rand()%num_col;
+    }
+    place_token(2,col_to_play); 
+  }
+  return victory;
 }
 
 /* plays a game of puissance 4 with 1 human player against a bot*/
@@ -282,17 +290,21 @@ void player_versus_ia(int num_line, int num_col){
       victory = player_turn(tokens_placed, actual_player_type);
       tokens_placed++;
       actual_player_type = change_player(actual_player_type);
-    }
+    } 
     else {
-      bot_turn();
+      victory = bot_turn();
       tokens_placed++;
-        
       actual_player_type = change_player(actual_player_type);
+      if (victory == true){
+	print_tabl();
+	printf("Game over, bot wins");
+      }
     }
   }
   if (victory == false){
     printf("Draw : no one managed to align 4 tokens !\n");
   }
+  
 }
 
 
